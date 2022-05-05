@@ -94,4 +94,20 @@ public class StorageImplTest {
                 elementTwo,
                 storage.get(key));
     }
+
+    @Test
+    public void addTwoElementsWithSameKeyWhenKeyIsObject() {
+        Storage<Cat, String> storage = new StorageImpl<>();
+        Cat cat = new Cat("black", "bro");
+        String firstElement = "gun";
+        String secondElement = "don";
+
+        storage.put(cat, firstElement);
+        storage.put(cat, secondElement);
+
+        Assert.assertEquals(
+                "When elements were adding with the same key, must be rewritten",
+                secondElement,
+                storage.get(cat));
+    }
 }
