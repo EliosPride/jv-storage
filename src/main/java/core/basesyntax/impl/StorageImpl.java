@@ -4,11 +4,10 @@ import core.basesyntax.Storage;
 
 public class StorageImpl<K, V> implements Storage<K, V> {
 
-    public static final int LENGTH = 10;
+    private static final int LENGTH = 10;
     private K[] keyArray;
     private V[] valueArray;
-    private int count = 0;
-    private int encounter = 0;
+    private int iterator = 0;
 
     public StorageImpl() {
         this.keyArray = (K[]) new Object[LENGTH];
@@ -17,27 +16,32 @@ public class StorageImpl<K, V> implements Storage<K, V> {
 
     @Override
     public void put(K key, V value) {
-        for (int i = 0; i < count; i++) {
-            if (key == keyArray[i]) {
+        for (int i = 0; i < iterator; i++) {
+            if (isPresent(key, i)) {
                 valueArray[i] = value;
-                keyArray[i] = key;
+                return;
             }
         }
-        keyArray[count] = key;
-        valueArray[count] = value;
-        count++;
+        keyArray[iterator] = key;
+        valueArray[iterator] = value;
+        iterator++;
     }
 
     @Override
     public V get(K key) {
-        for (int i = 0; i < count; i++) {
-            if (key == null && null == keyArray[i]) {
-                return valueArray[i];
-            }
-            if (keyArray[i] != null && keyArray[i].equals(key)) {
+        for (int i = 0; i < iterator; i++) {
+            if (isPresentOnIndex(key, i)) {
                 return valueArray[i];
             }
         }
         return null;
+    }
+
+    private boolean isPresentOnIndex(K key, int i) {
+        return (key == null && null == keyArray[i]) || (keyArray[i] != null && keyArray[i].equals(key));
+    }
+
+    private boolean isPresent(K key, int i) {
+        return (key == null && null == keyArray[i]) || (key != null && key.equals(keyArray[i]));
     }
 }
